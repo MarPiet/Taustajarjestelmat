@@ -6,7 +6,15 @@ namespace Taustajarjestelmat
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Console.WriteLine(args[0]);
         }
+    }
+    public interface ICityBikeDataFetcher
+    {
+    Task<int> GetBikeCountInStation(string stationName);
+    }
+    class RealTimeCityBikeDataFetcher : ICityBikeDataFetcher
+    {
+
     }
 }
