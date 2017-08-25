@@ -1,0 +1,10 @@
+C:\Users\Maz\Documents\Taustajarjestelmat\bin\Debug\netcoreapp2.0\Taustajarjestelmat.deps.json
+C:\Users\Maz\Documents\Taustajarjestelmat\bin\Debug\netcoreapp2.0\Taustajarjestelmat.runtimeconfig.json
+C:\Users\Maz\Documents\Taustajarjestelmat\bin\Debug\netcoreapp2.0\Taustajarjestelmat.runtimeconfig.dev.json
+C:\Users\Maz\Documents\Taustajarjestelmat\bin\Debug\netcoreapp2.0\Taustajarjestelmat.dll
+C:\Users\Maz\Documents\Taustajarjestelmat\bin\Debug\netcoreapp2.0\Taustajarjestelmat.pdb
+C:\Users\Maz\Documents\Taustajarjestelmat\obj\Debug\netcoreapp2.0\Taustajarjestelmat.csproj.CoreCompileInputs.cache
+C:\Users\Maz\Documents\Taustajarjestelmat\obj\Debug\netcoreapp2.0\Taustajarjestelmat.AssemblyInfoInputs.cache
+C:\Users\Maz\Documents\Taustajarjestelmat\obj\Debug\netcoreapp2.0\Taustajarjestelmat.AssemblyInfo.cs
+C:\Users\Maz\Documents\Taustajarjestelmat\obj\Debug\netcoreapp2.0\Taustajarjestelmat.dll
+C:\Users\Maz\Documents\Taustajarjestelmat\obj\Debug\netcoreapp2.0\Taustajarjestelmat.pdb
