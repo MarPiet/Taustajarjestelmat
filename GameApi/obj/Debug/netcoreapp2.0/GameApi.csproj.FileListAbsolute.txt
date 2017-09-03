@@ -1,0 +1,10 @@
+C:\Users\Maz\Documents\Taust\GameApi\bin\Debug\netcoreapp2.0\GameApi.deps.json
+C:\Users\Maz\Documents\Taust\GameApi\bin\Debug\netcoreapp2.0\GameApi.runtimeconfig.json
+C:\Users\Maz\Documents\Taust\GameApi\bin\Debug\netcoreapp2.0\GameApi.runtimeconfig.dev.json
+C:\Users\Maz\Documents\Taust\GameApi\bin\Debug\netcoreapp2.0\GameApi.dll
+C:\Users\Maz\Documents\Taust\GameApi\bin\Debug\netcoreapp2.0\GameApi.pdb
+C:\Users\Maz\Documents\Taust\GameApi\obj\Debug\netcoreapp2.0\GameApi.csproj.CoreCompileInputs.cache
+C:\Users\Maz\Documents\Taust\GameApi\obj\Debug\netcoreapp2.0\GameApi.AssemblyInfoInputs.cache
+C:\Users\Maz\Documents\Taust\GameApi\obj\Debug\netcoreapp2.0\GameApi.AssemblyInfo.cs
+C:\Users\Maz\Documents\Taust\GameApi\obj\Debug\netcoreapp2.0\GameApi.dll
+C:\Users\Maz\Documents\Taust\GameApi\obj\Debug\netcoreapp2.0\GameApi.pdb
