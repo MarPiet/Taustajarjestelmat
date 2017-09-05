@@ -9,7 +9,7 @@ namespace GameApi.models
         Player Delete(Guid id);
         Player Get(Guid id);
         Player[] GetAll();
-        bool Update(Player player);
+        bool Update(Guid id, Player player);
 
     }
 }

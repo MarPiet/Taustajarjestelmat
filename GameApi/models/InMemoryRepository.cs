@@ -44,12 +44,13 @@ namespace GameApi.models
         }
 
 
-        public bool Update(Player player)
+        public bool Update(Guid id, Player player)
         {
             foreach (var p in dict)
             {
-                if (p.Key == player.Id)
+                if (p.Key == id)
                 {
+                    if(player.Name != null)
                     p.Value.Name = player.Name;
                     p.Value.Level = player.Level;
                     p.Value.Id = player.Id;

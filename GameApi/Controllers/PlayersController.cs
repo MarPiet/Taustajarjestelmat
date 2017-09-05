@@ -8,20 +8,23 @@ namespace GameApi.Controllers
     [Route("api/players")]
     public class PlayersController : Controller
     {
-        static readonly IRepository repo = new InMemoryRepository();
+        private readonly IRepository repo;
 
+        public PlayersController(IRepository playerRepository)
+        {
+            this.repo = playerRepository;
+        }
+        
+        [HttpGet("{id}")]
+        public async Task<Player> Get(Guid id)
+        {
+            return repo.Get(id);
+        }
         [HttpGet]
         public async Task<Player[]> GetAll()
         {
             return repo.GetAll();
         }
-        [Route("api/players/{id:int}")]
-        [HttpGet]
-        public async Task<Player> Get(Guid id)
-        {
-            return repo.Get(id);
-        }
-
 
 
         [HttpPost]
@@ -37,16 +40,17 @@ namespace GameApi.Controllers
             return pelaaja;
 
         }
-        /*    [HttpPut]
-            public async Task<Player> Modify(Guid id, ModifiedPlayer player)
-            {
-                Player p = new Player();
-                p.Name = player.Name;
-                p.Id = player.Id;
-                p.Level = player.Level;
-                repo.Update(p);
-            }
-    */
+        [HttpPut]
+        public async Task<Player> Modify(Guid id, ModifiedPlayer player)
+        {
+            Player p = new Player();
+            p.Name = player.Name;
+            p.Id = player.Id;
+            p.Level = player.Level;
+            repo.Update(id, p);
+            return p;
+        }
+
 
 
         [HttpDelete]
