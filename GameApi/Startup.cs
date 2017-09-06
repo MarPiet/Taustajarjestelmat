@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using GameApi.models;
+using GameApi.processors;
 
 namespace GameApi
 {
@@ -26,6 +27,8 @@ namespace GameApi
         {
             services.AddMvc();
             services.AddSingleton<IRepository, InMemoryRepository>();
+            services.AddSingleton<PlayerProcessor, PlayerProcessor>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

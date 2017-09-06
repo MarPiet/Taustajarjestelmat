@@ -10,6 +10,7 @@ namespace GameApi.models
 
         public void Add(Player player)
         {
+            player.Id = Guid.NewGuid();
             dict.Add(player.Id, player);
         }
 

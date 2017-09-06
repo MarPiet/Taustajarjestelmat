@@ -1,54 +1,44 @@
 using Microsoft.AspNetCore.Mvc;
 using GameApi.models;
+using GameApi.processors;
 using System.Threading.Tasks;
 using System;
+
 
 namespace GameApi.Controllers
 {
     [Route("api/players")]
     public class PlayersController : Controller
     {
-        private readonly IRepository repo;
+        private PlayerProcessor playerProcessor;
 
-        public PlayersController(IRepository playerRepository)
+        public PlayersController(PlayerProcessor playerProcessor)
         {
-            this.repo = playerRepository;
+            this.playerProcessor = playerProcessor;
         }
-        
+
         [HttpGet("{id}")]
         public async Task<Player> Get(Guid id)
         {
-            return repo.Get(id);
+            return playerProcessor.GetPlayer(id);
         }
         [HttpGet]
         public async Task<Player[]> GetAll()
         {
-            return repo.GetAll();
+            return playerProcessor.Get();
         }
 
 
         [HttpPost]
         public async Task<Player> Create(NewPlayer player)
         {
-            var pelaaja = new Player()
-            {
-                Id = Guid.NewGuid(),
-                Name = player.Name
-
-            };
-            repo.Add(pelaaja);
-            return pelaaja;
+            return playerProcessor.Create(player);
 
         }
         [HttpPut]
         public async Task<Player> Modify(Guid id, ModifiedPlayer player)
         {
-            Player p = new Player();
-            p.Name = player.Name;
-            p.Id = player.Id;
-            p.Level = player.Level;
-            repo.Update(id, p);
-            return p;
+            return playerProcessor.Modify(id, player);
         }
 
 
@@ -56,8 +46,7 @@ namespace GameApi.Controllers
         [HttpDelete]
         public async Task<Player> Delete(Guid id)
         {
-            var player = repo.Delete(id);
-            return player;
+            return playerProcessor.Delete(id);
         }
 
 
