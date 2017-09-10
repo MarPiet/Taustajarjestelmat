@@ -28,7 +28,8 @@ namespace GameApi.processors
         {
             var pelaaja = new Player()
             {
-                Name = player.Name
+                Name = player.Name,
+                Items = new Item[100]
             };
             repo.Add(pelaaja);
             return pelaaja;

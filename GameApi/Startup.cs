@@ -28,6 +28,7 @@ namespace GameApi
             services.AddMvc();
             services.AddSingleton<IRepository, InMemoryRepository>();
             services.AddSingleton<PlayerProcessor, PlayerProcessor>();
+            services.AddSingleton<ItemsProcessor, ItemsProcessor>();
 
         }
 
