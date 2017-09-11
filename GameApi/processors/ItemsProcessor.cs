@@ -6,7 +6,7 @@ namespace GameApi.processors
     public class ItemsProcessor
     {
         private readonly IRepository repo;
-
+        Random rnd = new Random();
         public ItemsProcessor(IRepository repository)
         {
             repo = repository;
@@ -28,24 +28,31 @@ namespace GameApi.processors
             var itemi = new Item()
             {
                 Level = item.Level,
-                Price = item.Price,
+                Price = rnd.Next(1, 1001),
                 CreationDate = DateTime.Now,
-                id = Guid.NewGuid()
+                id = Guid.NewGuid(),
+                Type = item.Type
             };
+           /* if (repo.Get(playerId).Level < itemi.Level)
+            {
+                throw new LevelException("Player too low level");
+
+            }*/
             repo.AddItem(playerId, itemi);
             return itemi;
 
         }
 
 
-        public Item Modify(Guid id, Guid itemId, ModifiedItem item)
+        public Item Modify(Guid playerId, Guid id, ModifiedItem item)
         {
             Item i = new Item();
             i.Level = item.Level;
-            i.Price = item.Price;
+            i.Price = rnd.Next(1, 1001);
             i.CreationDate = DateTime.Now;
-            i.id = itemId;
-            repo.UpdateItem(id, itemId, i);
+            i.id = id;
+            i.Type = item.Type;
+            repo.UpdateItem(id, id, i);
             return i;
 
         }
@@ -55,5 +62,24 @@ namespace GameApi.processors
             var item = repo.DeleteItem(playerId, id);
             return item;
         }
+
+    }
+    public class LevelException : Exception
+    {
+        public LevelException()
+        {
+
+        }
+
+        public LevelException(string message) : base(message)
+        {
+
+        }
+        public LevelException(string message, Exception inner) : base(message, inner)
+        {
+
+        }
+
+
     }
 }

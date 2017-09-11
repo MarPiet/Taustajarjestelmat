@@ -3,10 +3,21 @@ using GameApi.models;
 using GameApi.processors;
 using System.Threading.Tasks;
 using System;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace GameApi.Controllers
 {
     [Route("api/players/{playerId}/items")]
+    public class LevelFilter : ExceptionFilterAttribute
+    {
+        public override void OnExceptionAsync(ExceptionContext context)
+        {
+            if (context.Exception is LevelException)
+            {
+                Console.WriteLine("asd");
+            }
+        }
+    }
     public class ItemsController : Controller
     {
         private ItemsProcessor itemsProcessor;
@@ -28,17 +39,18 @@ namespace GameApi.Controllers
             return itemsProcessor.Get(playerId);
         }
 
-
+       
         [HttpPost]
+        [LevelFilter]
         public async Task<Item> Create(Guid playerId, NewItem item)
         {
             return itemsProcessor.Create(playerId, item);
 
         }
         [HttpPut]
-        public async Task<Item> Modify(Guid playerId, Guid itemId, ModifiedItem item)
+        public async Task<Item> Modify(Guid playerId, Guid id, ModifiedItem item)
         {
-            return itemsProcessor.Modify(playerId, itemId, item);
+            return itemsProcessor.Modify(playerId, id, item);
         }
 
 
