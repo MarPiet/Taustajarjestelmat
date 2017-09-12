@@ -33,11 +33,11 @@ namespace GameApi.processors
                 id = Guid.NewGuid(),
                 Type = item.Type
             };
-           /* if (repo.Get(playerId).Level < itemi.Level)
+            if (repo.Get(playerId).Level < itemi.Level)
             {
-                throw new LevelException("Player too low level");
+                throw new LevelException("Player too low level", new LevelException());
 
-            }*/
+            }
             repo.AddItem(playerId, itemi);
             return itemi;
 

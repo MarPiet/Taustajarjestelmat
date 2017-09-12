@@ -4,29 +4,21 @@ using GameApi.processors;
 using System.Threading.Tasks;
 using System;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Logging;
 
 namespace GameApi.Controllers
 {
     [Route("api/players/{playerId}/items")]
-    public class LevelFilter : ExceptionFilterAttribute
-    {
-        public override void OnExceptionAsync(ExceptionContext context)
-        {
-            if (context.Exception is LevelException)
-            {
-                Console.WriteLine("asd");
-            }
-        }
-    }
+
     public class ItemsController : Controller
     {
         private ItemsProcessor itemsProcessor;
+ 
 
         public ItemsController(ItemsProcessor itemsProcessor)
         {
             this.itemsProcessor = itemsProcessor;
         }
-
         /* [HttpGet("{id}")]
          public async Task<Item> Get(Guid id)
          {
@@ -39,7 +31,7 @@ namespace GameApi.Controllers
             return itemsProcessor.Get(playerId);
         }
 
-       
+
         [HttpPost]
         [LevelFilter]
         public async Task<Item> Create(Guid playerId, NewItem item)
@@ -63,6 +55,17 @@ namespace GameApi.Controllers
 
 
 
+    }
+        public class LevelFilter : ExceptionFilterAttribute
+    {
+        public override void OnException(ExceptionContext context)
+        {
+            if (context.Exception is LevelException)
+            {
+               // context.Result = new NotFoundResult();
+                Console.WriteLine(context.Result);
+            }
+        }
     }
 
 }

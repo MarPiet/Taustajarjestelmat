@@ -29,7 +29,8 @@ namespace GameApi.processors
             var pelaaja = new Player()
             {
                 Name = player.Name,
-                Items = new Item[10]
+                Items = new Item[10],
+                Level = player.Level
             };
             repo.Add(pelaaja);
             return pelaaja;

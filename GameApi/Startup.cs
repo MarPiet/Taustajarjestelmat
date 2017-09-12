@@ -29,8 +29,8 @@ namespace GameApi
             services.AddSingleton<IRepository, InMemoryRepository>();
             services.AddSingleton<PlayerProcessor, PlayerProcessor>();
             services.AddSingleton<ItemsProcessor, ItemsProcessor>();
-            services.AddMvc(options => {
-            options.Filters.Add(new LevelException());
+            /*services.AddMvc(options => {
+            options.Filters.Add(new LevelException());*/
 
         }
 
@@ -43,6 +43,7 @@ namespace GameApi
             }
 
             app.UseMvc();
+
         }
     }
 }
