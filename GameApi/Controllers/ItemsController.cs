@@ -13,17 +13,12 @@ namespace GameApi.Controllers
     public class ItemsController : Controller
     {
         private ItemsProcessor itemsProcessor;
- 
+
 
         public ItemsController(ItemsProcessor itemsProcessor)
         {
             this.itemsProcessor = itemsProcessor;
         }
-        /* [HttpGet("{id}")]
-         public async Task<Item> Get(Guid id)
-         {
-             return itemsProcessor.GetItem(id);
-         }*/
 
         [HttpGet]
         public async Task<Item[]> GetAll(Guid playerId)
@@ -40,6 +35,7 @@ namespace GameApi.Controllers
 
         }
         [HttpPut]
+        [LevelFilter]
         public async Task<Item> Modify(Guid playerId, Guid id, ModifiedItem item)
         {
             return itemsProcessor.Modify(playerId, id, item);
@@ -56,14 +52,15 @@ namespace GameApi.Controllers
 
 
     }
-        public class LevelFilter : ExceptionFilterAttribute
+    public class LevelFilter : ExceptionFilterAttribute
     {
         public override void OnException(ExceptionContext context)
         {
             if (context.Exception is LevelException)
             {
-               // context.Result = new NotFoundResult();
-                Console.WriteLine(context.Result);
+                context.Result = new NotFoundResult();
+                Console.WriteLine("Player level too low");
+                
             }
         }
     }

@@ -96,21 +96,26 @@ namespace GameApi.models
 
         }
 
-        public bool UpdateItem(Guid id, Guid itemid, Item item)
+        public bool UpdateItem(Guid playerId, Guid id, Item item)
         {
             foreach (var p in dict)
             {
-                if (p.Key == id)
+                if (p.Key == playerId)
                 {
                     for (int i = 0; i < p.Value.Items.Length; i++)
-                        if (p.Value.Items[i].id == itemid)
+                    {
+                        if (id == p.Value.Items[i].id)
                         {
+
                             p.Value.Items[i].CreationDate = item.CreationDate;
                             p.Value.Items[i].Level = item.Level;
                             p.Value.Items[i].Price = item.Price;
+                            p.Value.Items[i].Type = item.Type;
 
                             return true;
                         }
+                    }
+
 
                 }
 

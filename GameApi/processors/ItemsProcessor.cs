@@ -12,10 +12,7 @@ namespace GameApi.processors
             repo = repository;
         }
 
-        public Item GetItem(Guid id)
-        {
-            return repo.Get(id).Items[0];
-        }
+
 
         public Item[] Get(Guid id)
         {
@@ -52,7 +49,12 @@ namespace GameApi.processors
             i.CreationDate = DateTime.Now;
             i.id = id;
             i.Type = item.Type;
-            repo.UpdateItem(id, id, i);
+            if (repo.Get(playerId).Level < item.Level)
+            {
+                throw new LevelException("Player too low level", new LevelException());
+
+            }
+            repo.UpdateItem(playerId, id, i);
             return i;
 
         }
