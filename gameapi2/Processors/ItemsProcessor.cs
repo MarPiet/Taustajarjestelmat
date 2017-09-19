@@ -48,7 +48,7 @@ namespace gameapi.Processors
         {
             Item item = await _repository.GetItem(playerId, id);
             item.Price = modifiedItem.Price;
-            await _repository.UpdateItem(id, item);
+            await _repository.UpdateItem(playerId, item);
             return item;
         }
     }

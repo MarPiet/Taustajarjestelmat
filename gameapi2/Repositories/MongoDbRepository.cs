@@ -79,7 +79,16 @@ namespace gameapi.Repositories
 
         public Task<Item[]> GetAllItems(Guid playerId)
         {
-            throw new NotImplementedException();
+            Item[] item = new Item[10];
+            var filter = Builders<Player>.Filter.Eq(p => p.Id, playerId);
+            var cursor = _collection.Find(filter);
+            var player = cursor.First();
+
+            for (int i = 0; i < player.Items.Length-1; i++)
+            {
+                item[i] = player.Items[i];                        
+            }
+            return Task.Run(() => item);
         }
 
         public async Task<Player[]> GetAllPlayers()
@@ -103,17 +112,17 @@ namespace gameapi.Repositories
             return player;
         }
 
-        public async Task<Item> GetItem(Guid playerId, Guid itemId)
+        public Task<Item> GetItem(Guid playerId, Guid itemId)
         {
             var filter = Builders<Player>.Filter.Eq(p => p.Id, playerId);
-            var cursor = await _collection.FindAsync(filter);
-            var player = await cursor.FirstAsync();
+            var cursor = _collection.Find(filter);
+            var player = cursor.First();
 
             for (int i = 0; i < player.Items.Length; i++)
             {
                 if (player.Items[i].Id == itemId)
                 {
-                   return player.Items[i];
+                    return Task.Run(() => player.Items[i]);
                 }
 
 
@@ -134,7 +143,26 @@ namespace gameapi.Repositories
 
         public Task<Item> UpdateItem(Guid playerId, Item item)
         {
-            throw new NotImplementedException();
+            Console.WriteLine(playerId);
+            var filter = Builders<Player>.Filter.Eq(p => p.Id, playerId);
+            var cursor = _collection.Find(filter);
+            var player = cursor.First();
+
+
+            for (int i = 0; i < player.Items.Length-1; i++)
+            {
+                if (player.Items[i].Id == item.Id)
+                {
+
+                    var filter1 = Builders<Player>.Filter.Eq(p => p.Items[i].Id, item.Id);
+                    var update = Builders<Player>.Update.Set(x => x.Items[i].Price, item.Price);
+                    var result = _collection.UpdateOne(filter, update);
+                    return Task.Run(() => player.Items[i]);
+                }
+
+
+            }
+            return null;
         }
 
         public async Task<Player> UpdatePlayer(Player player)

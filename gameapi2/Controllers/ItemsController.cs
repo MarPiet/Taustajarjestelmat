@@ -41,7 +41,7 @@ namespace gameapi.Controllers
         }
 
         [HttpPut("{id}")]
-        public Task<Item> Update(Guid playerId, Guid id, [FromBody]ModifiedItem item)
+        public Task<Item> Update(Guid playerId, Guid id, /*[FromBody]*/ModifiedItem item)
         {
             return _processor.Update(playerId, id, item);
         }
