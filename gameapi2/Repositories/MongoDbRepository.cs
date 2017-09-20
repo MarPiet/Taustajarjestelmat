@@ -22,11 +22,11 @@ namespace gameapi.Repositories
             _collection = database.GetCollection<Player>("players");
         }
 
-        public async Task<Item> CreateItem(Guid playerId, Item item)
+        public Task<Item> CreateItem(Guid playerId, Item item)
         {
             var filter = Builders<Player>.Filter.Eq(p => p.Id, playerId);
-            var cursor = await _collection.FindAsync(filter);
-            var player = await cursor.FirstAsync();
+            var cursor = _collection.Find(filter);
+            var player = cursor.First();
 
             for (int i = 0; i < player.Items.Length; i++)
             {
@@ -40,7 +40,7 @@ namespace gameapi.Repositories
 
 
             }
-            return item;
+            return Task.Run(() => item);
         }
 
         public async Task<Player> CreatePlayer(Player player)
@@ -49,25 +49,29 @@ namespace gameapi.Repositories
             return player;
         }
 
-        public async Task<Item> DeleteItem(Guid playerId, Item item)
+        public Task<Item> DeleteItem(Guid playerId, Item item)
         {
             var filter = Builders<Player>.Filter.Eq(p => p.Id, playerId);
-            var cursor = await _collection.FindAsync(filter);
-            var player = await cursor.FirstAsync();
+            var cursor = _collection.Find(filter);
+            var player = cursor.First();
 
             for (int i = 0; i < player.Items.Length; i++)
             {
-                if (player.Items[i].Id == item.Id)
+                if (player.Items[i] != null)
                 {
-                    var filter1 = Builders<Player>.Filter.Eq(p => p.Items[i], item);
-                    var update = Builders<Player>.Update.Set(x => x.Items[i], null);
-                    var result = _collection.UpdateOne(filter, update);
-                    break;
+                    if (player.Items[i].Id == item.Id)
+                    {
+                        var filter1 = Builders<Player>.Filter.Eq(p => p.Items[i], item);
+                        var update = Builders<Player>.Update.Set(x => x.Items[i], null);
+                        var result = _collection.UpdateOne(filter, update);
+                        break;
+                    }
                 }
 
 
+
             }
-            return item;
+            return Task.Run(() => item);
         }
 
         public async Task<Player> DeletePlayer(Guid playerId)
@@ -84,9 +88,9 @@ namespace gameapi.Repositories
             var cursor = _collection.Find(filter);
             var player = cursor.First();
 
-            for (int i = 0; i < player.Items.Length-1; i++)
+            for (int i = 0; i < player.Items.Length - 1; i++)
             {
-                item[i] = player.Items[i];                        
+                item[i] = player.Items[i];
             }
             return Task.Run(() => item);
         }
@@ -120,11 +124,12 @@ namespace gameapi.Repositories
 
             for (int i = 0; i < player.Items.Length; i++)
             {
-                if (player.Items[i].Id == itemId)
+                if (player.Items[i] != null)
                 {
-                    return Task.Run(() => player.Items[i]);
-                }
+                    if (player.Items[i].Id == itemId)
+                        return Task.Run(() => player.Items[i]);
 
+                }
 
             }
             return null;
@@ -143,22 +148,25 @@ namespace gameapi.Repositories
 
         public Task<Item> UpdateItem(Guid playerId, Item item)
         {
-            Console.WriteLine(playerId);
             var filter = Builders<Player>.Filter.Eq(p => p.Id, playerId);
             var cursor = _collection.Find(filter);
             var player = cursor.First();
 
 
-            for (int i = 0; i < player.Items.Length-1; i++)
+            for (int i = 0; i < player.Items.Length - 1; i++)
             {
-                if (player.Items[i].Id == item.Id)
+                if (player.Items[i] != null)
                 {
+                    if (player.Items[i].Id == item.Id)
+                    {
 
-                    var filter1 = Builders<Player>.Filter.Eq(p => p.Items[i].Id, item.Id);
-                    var update = Builders<Player>.Update.Set(x => x.Items[i].Price, item.Price);
-                    var result = _collection.UpdateOne(filter, update);
-                    return Task.Run(() => player.Items[i]);
+                        var filter1 = Builders<Player>.Filter.Eq(p => p.Items[i].Id, item.Id);
+                        var update = Builders<Player>.Update.Set(x => x.Items[i].Price, item.Price);
+                        var result = _collection.UpdateOne(filter, update);
+                        return Task.Run(() => player.Items[i]);
+                    }
                 }
+
 
 
             }
