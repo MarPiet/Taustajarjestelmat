@@ -9,7 +9,7 @@ namespace gameapi.Processors
     public class ItemsProcessor
     {
         private IRepository _repository;
-        
+
         public ItemsProcessor(IRepository repository)
         {
             _repository = repository;
@@ -42,6 +42,10 @@ namespace gameapi.Processors
             Item item = await _repository.GetItem(playerId, id);
             await _repository.DeleteItem(playerId, item);
             return item;
+        }
+        public async Task<Item> DeleteAndAddScore(Guid playerId)
+        {
+            return await _repository.DeleteAndAddScore(playerId);
         }
 
         public async Task<Item> Update(Guid playerId, Guid id, ModifiedItem modifiedItem)

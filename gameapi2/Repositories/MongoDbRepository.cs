@@ -95,22 +95,58 @@ namespace gameapi.Repositories
             return Task.Run(() => item);
         }
 
-        public async Task<Player[]> GetAllPlayers()
+        public async Task<Player[]> GetAllPlayers(int minScore, string itemType)
         {
             int counter = 0;
             Player[] player = new Player[2];
-            var filter = Builders<Player>.Filter.Empty;
-            var cursor = await _collection.FindAsync(filter);
-            while (await cursor.MoveNextAsync())
+            if (minScore == 0 && itemType == null)
             {
-                IEnumerable<Player> batch = cursor.Current;
-                foreach (Player document in batch)
+
+                var filter = Builders<Player>.Filter.Empty;
+                var cursor = await _collection.FindAsync(filter);
+                while (await cursor.MoveNextAsync())
                 {
-                    player[counter] = document;
-                    counter++;
+                    IEnumerable<Player> batch = cursor.Current;
+                    foreach (Player document in batch)
+                    {
+                        player[counter] = document;
+                        counter++;
+                    }
+
+                }
+            }
+            else if (minScore > 0)
+            {
+                FilterDefinition<Player> filter = Builders<Player>.Filter.Gte("Score", minScore);
+                var cursor = await _collection.FindAsync(filter);
+                while (await cursor.MoveNextAsync())
+                {
+                    IEnumerable<Player> batch = cursor.Current;
+                    foreach (Player document in batch)
+                    {
+                        player[counter] = document;
+                        counter++;
+                    }
+
                 }
 
             }
+            else if (itemType != null)
+            {
+                FilterDefinition<Player> filter = Builders<Player>.Filter.Eq("Items.Type", itemType);
+                var cursor = await _collection.FindAsync(filter);
+                while (await cursor.MoveNextAsync())
+                {
+                    IEnumerable<Player> batch = cursor.Current;
+                    foreach (Player document in batch)
+                    {
+                        player[counter] = document;
+                        counter++;
+                    }
+
+                }
+            }
+
 
 
             return player;
@@ -141,6 +177,45 @@ namespace gameapi.Repositories
             //We use filters to create queries
             //Eq means Equals
             var filter = Builders<Player>.Filter.Eq(p => p.Id, playerId);
+            var cursor = await _collection.FindAsync(filter);
+            var player = await cursor.FirstAsync();
+            return player;
+        }
+        public async Task<Player> UpdatePlayerNameAndScore(string name, string newName, int score)
+        {
+            FilterDefinition<Player> filter1;
+            if (newName != null)
+            {
+                var filter = Builders<Player>.Filter.Eq(p => p.Name, name);
+                var update = Builders<Player>.Update.Set("Name", newName);
+                await _collection.UpdateOneAsync(filter, update);
+                filter1 = Builders<Player>.Filter.Eq(p => p.Name, newName);
+            }
+            else
+            {
+                var filter = Builders<Player>.Filter.Eq(p => p.Name, name);
+                var update = Builders<Player>.Update.Inc("Score", score);
+                await _collection.UpdateOneAsync(filter, update);
+                filter1 = Builders<Player>.Filter.Eq(p => p.Name, name);
+            }
+
+
+            //testi
+
+            var cursor = await _collection.FindAsync(filter1);
+            var player1 = await cursor.FirstAsync();
+
+            return player1;
+        }
+
+
+
+        public async Task<Player> GetPlayerByName(string name)
+        {
+            //Builders<T> static class is where the filters are to be found 
+            //We use filters to create queries
+            //Eq means Equals
+            var filter = Builders<Player>.Filter.Eq(p => p.Name, name);
             var cursor = await _collection.FindAsync(filter);
             var player = await cursor.FirstAsync();
             return player;
@@ -178,6 +253,49 @@ namespace gameapi.Repositories
             var filter = Builders<Player>.Filter.Eq(p => p.Id, player.Id);
             await _collection.ReplaceOneAsync(filter, player);
             return player;
+        }
+
+        public async Task<Player> PushItem(Guid id, Item item)
+        {
+            var filter = Builders<Player>.Filter.Eq(p => p.Id, id);
+
+
+            var update = Builders<Player>.Update.Push(x => x.Items, item);
+            await _collection.UpdateOneAsync(filter, update);
+
+            var cursor = _collection.Find(filter);
+            var player = cursor.First();
+            return player;
+
+
+        }
+
+        public async Task<Item> DeleteAndAddScore(Guid playerId)
+        {
+            var filter = Builders<Player>.Filter.Eq(p => p.Id, playerId);
+            var cursor = await _collection.FindAsync(filter);
+            var player = await cursor.FirstAsync();
+
+
+            for (int i = 0; i < player.Items.Length - 1; i++)
+            {
+                if (player.Items[i] != null)
+                {
+
+                    var item = player.Items[i];
+                    var update = Builders<Player>.Update.PopFirst(x => x.Items);
+                    var result = await _collection.UpdateOneAsync(filter, update);
+
+                    var update2 = Builders<Player>.Update.Inc("Score", 50);
+                    var result2 = await _collection.UpdateOneAsync(filter, update2);
+                    return item;
+
+                }
+
+
+
+            }
+            return null;
         }
     }
 }

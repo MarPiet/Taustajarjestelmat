@@ -33,6 +33,12 @@ namespace gameapi.Controllers
         {
             return _processor.Create(playerId, item);
         }
+        //tht9
+        [HttpDelete]
+        public Task<Item> DeleteAndAddScore(Guid playerId)
+        {
+            return _processor.DeleteAndAddScore(playerId);
+        }
 
         [HttpDelete("{id}")]
         public Task<Item> Delete(Guid playerId, Guid id)

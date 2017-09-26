@@ -17,24 +17,37 @@ namespace gameapi.Controllers
         {
             _processor = processor;
         }
-        
+        //tht1, 4
         [HttpGet]
-        public Task<Player[]> GetAll()
+        public Task<Player[]> GetAll(int minScore, string itemType)
         {
-            return _processor.GetAll();
+            return _processor.GetAll(minScore, itemType);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:guid}")]
         public Task<Player> Get(Guid id)
         {
             return _processor.Get(id);
         }
+        //tht2
+        [HttpGet("{name:minlength(1)}")]
+        public Task<Player> Get(string name)
+        {
+            return _processor.GetByName(name);
+        }
+
 
         [HttpPost]
         [ValidateModel]
         public Task<Player> Create(/*[FromBody]*/NewPlayer player)
         {
             return _processor.Create(player);
+        }
+        //tht8
+        [HttpPost("{id}")]
+        public Task<Player> PushItem(Guid id, string type, int level)
+        {
+            return _processor.PushItem(id, type, level);
         }
 
         [HttpDelete("{id}")]
@@ -48,5 +61,12 @@ namespace gameapi.Controllers
         {
             return _processor.Update(id, player);
         }
+        //tht6, 7
+        [HttpPut("{name:minlength(1)}")]
+        public Task<Player> UpdatePlayerNameAndScore(string name, string newName, int score)
+        {
+            return _processor.UpdatePlayerNameAndScore(name, newName, score);
+        }
+
     }
 }
