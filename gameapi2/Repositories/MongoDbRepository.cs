@@ -37,6 +37,12 @@ namespace gameapi.Repositories
                     var result = await _collection.UpdateOneAsync(filter, update);
                     break;
                 }
+                else if (i == player.Items.Length - 1)
+                {
+
+                    var update = Builders<Player>.Update.Push(x => x.Items, item);
+                    await _collection.UpdateOneAsync(filter, update);
+                }
 
 
             }
@@ -179,9 +185,6 @@ namespace gameapi.Repositories
 
         public async Task<Player> GetPlayer(Guid playerId)
         {
-            //Builders<T> static class is where the filters are to be found 
-            //We use filters to create queries
-            //Eq means Equals
             var filter = Builders<Player>.Filter.Eq(p => p.Id, playerId);
             var cursor = await _collection.FindAsync(filter);
             var player = await cursor.FirstAsync();
@@ -205,9 +208,7 @@ namespace gameapi.Repositories
                 filter1 = Builders<Player>.Filter.Eq(p => p.Name, name);
             }
 
-
             //testi
-
             var cursor = await _collection.FindAsync(filter1);
             var player1 = await cursor.FirstAsync();
 
@@ -218,9 +219,6 @@ namespace gameapi.Repositories
 
         public async Task<Player> GetPlayerByName(string name)
         {
-            //Builders<T> static class is where the filters are to be found 
-            //We use filters to create queries
-            //Eq means Equals
             var filter = Builders<Player>.Filter.Eq(p => p.Name, name);
             var cursor = await _collection.FindAsync(filter);
             var player = await cursor.FirstAsync();
@@ -248,8 +246,6 @@ namespace gameapi.Repositories
                     }
                 }
 
-
-
             }
             return null;
         }
@@ -264,16 +260,12 @@ namespace gameapi.Repositories
         public async Task<Player> PushItem(Guid id, Item item)
         {
             var filter = Builders<Player>.Filter.Eq(p => p.Id, id);
-
-
             var update = Builders<Player>.Update.Push(x => x.Items, item);
             await _collection.UpdateOneAsync(filter, update);
 
             var cursor = _collection.Find(filter);
             var player = cursor.First();
             return player;
-
-
         }
 
         public async Task<Item> DeleteAndAddScore(Guid playerId)
@@ -281,7 +273,6 @@ namespace gameapi.Repositories
             var filter = Builders<Player>.Filter.Eq(p => p.Id, playerId);
             var cursor = await _collection.FindAsync(filter);
             var player = await cursor.FirstAsync();
-
 
             for (int i = 0; i < player.Items.Length; i++)
             {
@@ -297,8 +288,6 @@ namespace gameapi.Repositories
                     return item;
 
                 }
-
-
 
             }
             return null;
@@ -316,5 +305,37 @@ namespace gameapi.Repositories
             else
                 return 0;
         }
+        public async Task<Player[]> GetTopTen()
+        {
+
+            var filter = Builders<Player>.Filter.Empty;
+            var list = await _collection.Find(filter).Sort(Builders<Player>.Sort.Descending("Score")).ToListAsync();
+            Player[] player = new Player[list.Count];
+            for (int i = 0; i < list.Count; i++)
+            {
+                player[i] = list[i];
+                if (i == 9)
+                    break;
+            }
+            return player;
+
+
+        }
+        public async Task<Player[]> GetBySize(int num)
+        {
+            var filter = Builders<Player>.Filter.Size(p => p.Items, num);
+            var cursor = await _collection.FindAsync(filter);
+            var list = cursor.ToList();
+            Player[] player = new Player[list.Count];
+            for (int i = 0; i < list.Count; i++)
+            {
+                player[i] = list[i];
+            }
+            return player;
+
+        }
+
+
+
     }
 }

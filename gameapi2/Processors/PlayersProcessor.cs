@@ -33,7 +33,7 @@ namespace gameapi.Processors
         {
             Player player = new Player()
             {
-                Items = new Item[10],
+                Items = new Item[1],
                 Id = Guid.NewGuid(),
                 Name = newPlayer.Name,
                 Level = 1,
@@ -71,6 +71,15 @@ namespace gameapi.Processors
 
             return await _repository.PushItem(id, item);
         }
+        public async Task<Player[]> GetTopTen()
+        {
+            return await _repository.GetTopTen();
+        }
+        public async Task<Player[]> GetBySize(int num){
+            return await _repository.GetBySize(num);
+        }
+
+
 
     }
 }

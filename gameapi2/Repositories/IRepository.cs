@@ -11,6 +11,8 @@ namespace gameapi.Repositories
         Task<Player> GetPlayer(Guid playerId);
         Task<Player> GetPlayerByName(string name);
         Task<Player[]> GetAllPlayers(int minScore, string itemType);
+        Task<Player[]> GetTopTen();
+        Task<Player[]> GetBySize(int num);
         Task<Player> PushItem(Guid id, Item item);
         Task<Player> UpdatePlayer(Player player);
         Task<Player> UpdatePlayerNameAndScore(string name, string newName, int score);

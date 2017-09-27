@@ -23,21 +23,29 @@ namespace gameapi.Controllers
         {
             return _processor.GetAll(minScore, itemType);
         }
-
+        //tht5
+        [HttpGet("{num:int}")]
+        public Task<Player[]> GetBySize(int num)
+        {
+            return _processor.GetBySize(num);
+        }
         [HttpGet("{id:guid}")]
         public Task<Player> Get(Guid id)
         {
             return _processor.Get(id);
         }
-
+        //tht9
+        [HttpGet("{asd:bool}")]
+        public Task<Player[]> GetTopTen()
+        {
+            return _processor.GetTopTen();
+        }
         //tht2
-        [HttpGet("{name:minlength(1)}")]
+        [HttpGet("{name}")]
         public Task<Player> Get(string name)
         {
             return _processor.GetByName(name);
         }
-
-
         [HttpPost]
         [ValidateModel]
         public Task<Player> Create(/*[FromBody]*/NewPlayer player)
