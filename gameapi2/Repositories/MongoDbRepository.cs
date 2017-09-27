@@ -81,27 +81,32 @@ namespace gameapi.Repositories
             return null;
         }
 
-        public Task<Item[]> GetAllItems(Guid playerId)
+        public async Task<Item[]> GetAllItems(Guid playerId)
         {
-            Item[] item = new Item[10];
+
             var filter = Builders<Player>.Filter.Eq(p => p.Id, playerId);
-            var cursor = _collection.Find(filter);
+            var cursor = await _collection.FindAsync(filter);
             var player = cursor.First();
 
-            for (int i = 0; i < player.Items.Length - 1; i++)
+            int itemCount = player.Items.Length;
+            Item[] item = new Item[itemCount];
+
+            for (int i = 0; i < player.Items.Length; i++)
             {
                 item[i] = player.Items[i];
             }
-            return Task.Run(() => item);
+            return item;
         }
 
         public async Task<Player[]> GetAllPlayers(int minScore, string itemType)
         {
+            var countfilter = Builders<Player>.Filter.Empty;
+            int playerCount = (int)_collection.Count(countfilter);
             int counter = 0;
-            Player[] player = new Player[2];
+            Player[] player = new Player[playerCount];
+
             if (minScore == 0 && itemType == null)
             {
-
                 var filter = Builders<Player>.Filter.Empty;
                 var cursor = await _collection.FindAsync(filter);
                 while (await cursor.MoveNextAsync())
@@ -117,6 +122,7 @@ namespace gameapi.Repositories
             }
             else if (minScore > 0)
             {
+
                 FilterDefinition<Player> filter = Builders<Player>.Filter.Gte("Score", minScore);
                 var cursor = await _collection.FindAsync(filter);
                 while (await cursor.MoveNextAsync())
@@ -152,10 +158,10 @@ namespace gameapi.Repositories
             return player;
         }
 
-        public Task<Item> GetItem(Guid playerId, Guid itemId)
+        public async Task<Item> GetItem(Guid playerId, Guid itemId)
         {
             var filter = Builders<Player>.Filter.Eq(p => p.Id, playerId);
-            var cursor = _collection.Find(filter);
+            var cursor = await _collection.FindAsync(filter);
             var player = cursor.First();
 
             for (int i = 0; i < player.Items.Length; i++)
@@ -163,7 +169,7 @@ namespace gameapi.Repositories
                 if (player.Items[i] != null)
                 {
                     if (player.Items[i].Id == itemId)
-                        return Task.Run(() => player.Items[i]);
+                        return player.Items[i];
 
                 }
 
@@ -221,10 +227,10 @@ namespace gameapi.Repositories
             return player;
         }
 
-        public Task<Item> UpdateItem(Guid playerId, Item item)
+        public async Task<Item> UpdateItem(Guid playerId, Item item)
         {
             var filter = Builders<Player>.Filter.Eq(p => p.Id, playerId);
-            var cursor = _collection.Find(filter);
+            var cursor = await _collection.FindAsync(filter);
             var player = cursor.First();
 
 
@@ -237,8 +243,8 @@ namespace gameapi.Repositories
 
                         var filter1 = Builders<Player>.Filter.Eq(p => p.Items[i].Id, item.Id);
                         var update = Builders<Player>.Update.Set(x => x.Items[i].Price, item.Price);
-                        var result = _collection.UpdateOne(filter, update);
-                        return Task.Run(() => player.Items[i]);
+                        var result = await _collection.UpdateOneAsync(filter, update);
+                        return player.Items[i];
                     }
                 }
 
@@ -296,6 +302,19 @@ namespace gameapi.Repositories
 
             }
             return null;
+        }
+        public async Task<int> GetCommonLevel()
+        {
+            var aggregate = _collection.Aggregate().Project(new BsonDocument { { "Level", 1 } })
+            .Group(new BsonDocument { { "_id", "$Level" }, { "Count", new BsonDocument("$sum", 1) } })
+            .Sort(new BsonDocument { { "Count", -1 } }).Limit(1);
+            if (aggregate.Any())
+            {
+                BsonDocument result = await aggregate.FirstAsync();
+                return result["_id"].ToInt32();
+            }
+            else
+                return 0;
         }
     }
 }

@@ -16,6 +16,8 @@ namespace gameapi.Processors
 
         public Task<Player[]> GetAll(int minScore, string itemType)
         {
+            Console.WriteLine("Most Common Level: " + _repository.GetCommonLevel().Result);
+
             return _repository.GetAllPlayers(minScore, itemType);
         }
 
@@ -57,19 +59,18 @@ namespace gameapi.Processors
         {
             return await _repository.UpdatePlayerNameAndScore(name, newName, score);
         }
-            public async Task<Player> PushItem(Guid id, string type, int itemLevel)
+        public async Task<Player> PushItem(Guid id, string type, int itemLevel)
         {
-                 var item = new Item()
+            var item = new Item()
             {
                 Id = Guid.NewGuid(),
                 Price = 10,
                 Level = itemLevel,
                 Type = type,
             };
-   
+
             return await _repository.PushItem(id, item);
         }
-
 
     }
 }

@@ -15,6 +15,7 @@ namespace gameapi.Repositories
         Task<Player> UpdatePlayer(Player player);
         Task<Player> UpdatePlayerNameAndScore(string name, string newName, int score);
         Task<Player> DeletePlayer(Guid playerId);
+        Task<int> GetCommonLevel();
         Task<Item> CreateItem(Guid playerId, Item item);
         Task<Item> GetItem(Guid playerId, Guid itemId);
         Task<Item[]> GetAllItems(Guid playerId);

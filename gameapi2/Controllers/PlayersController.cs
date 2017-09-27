@@ -17,7 +17,7 @@ namespace gameapi.Controllers
         {
             _processor = processor;
         }
-        //tht1, 4
+        //tht1, 4, 11
         [HttpGet]
         public Task<Player[]> GetAll(int minScore, string itemType)
         {
@@ -29,6 +29,7 @@ namespace gameapi.Controllers
         {
             return _processor.Get(id);
         }
+
         //tht2
         [HttpGet("{name:minlength(1)}")]
         public Task<Player> Get(string name)
@@ -56,7 +57,7 @@ namespace gameapi.Controllers
             return _processor.Delete(id);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:guid}")]
         public Task<Player> Update(Guid id, /*[FromBody]*/ModifiedPlayer player)
         {
             return _processor.Update(id, player);
@@ -67,6 +68,7 @@ namespace gameapi.Controllers
         {
             return _processor.UpdatePlayerNameAndScore(name, newName, score);
         }
+
 
     }
 }
