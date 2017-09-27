@@ -22,10 +22,10 @@ namespace gameapi.Repositories
             _collection = database.GetCollection<Player>("players");
         }
 
-        public Task<Item> CreateItem(Guid playerId, Item item)
+        public async Task<Item> CreateItem(Guid playerId, Item item)
         {
             var filter = Builders<Player>.Filter.Eq(p => p.Id, playerId);
-            var cursor = _collection.Find(filter);
+            var cursor = await _collection.FindAsync(filter);
             var player = cursor.First();
 
             for (int i = 0; i < player.Items.Length; i++)
@@ -34,13 +34,13 @@ namespace gameapi.Repositories
                 {
                     var filter1 = Builders<Player>.Filter.Eq(p => p.Items[i], null);
                     var update = Builders<Player>.Update.Set(x => x.Items[i], item);
-                    var result = _collection.UpdateOne(filter, update);
+                    var result = await _collection.UpdateOneAsync(filter, update);
                     break;
                 }
 
 
             }
-            return Task.Run(() => item);
+            return item;
         }
 
         public async Task<Player> CreatePlayer(Player player)
@@ -49,10 +49,10 @@ namespace gameapi.Repositories
             return player;
         }
 
-        public Task<Item> DeleteItem(Guid playerId, Item item)
+        public async Task<Item> DeleteItem(Guid playerId, Item item)
         {
             var filter = Builders<Player>.Filter.Eq(p => p.Id, playerId);
-            var cursor = _collection.Find(filter);
+            var cursor = await _collection.FindAsync(filter);
             var player = cursor.First();
 
             for (int i = 0; i < player.Items.Length; i++)
@@ -63,7 +63,7 @@ namespace gameapi.Repositories
                     {
                         var filter1 = Builders<Player>.Filter.Eq(p => p.Items[i], item);
                         var update = Builders<Player>.Update.Set(x => x.Items[i], null);
-                        var result = _collection.UpdateOne(filter, update);
+                        var result = await _collection.UpdateOneAsync(filter, update);
                         break;
                     }
                 }
@@ -71,7 +71,7 @@ namespace gameapi.Repositories
 
 
             }
-            return Task.Run(() => item);
+            return item;
         }
 
         public async Task<Player> DeletePlayer(Guid playerId)
@@ -283,7 +283,7 @@ namespace gameapi.Repositories
             var player = await cursor.FirstAsync();
 
 
-            for (int i = 0; i < player.Items.Length - 1; i++)
+            for (int i = 0; i < player.Items.Length; i++)
             {
                 if (player.Items[i] != null)
                 {
