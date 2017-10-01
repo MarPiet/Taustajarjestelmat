@@ -11,6 +11,7 @@ using Microsoft.Extensions.Options;
 using gameapi.mongodb;
 using gameapi.Processors;
 using gameapi.Repositories;
+using gameapi2.Middleware;
 
 namespace gameapi2
 {
@@ -18,7 +19,14 @@ namespace gameapi2
     {
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder()
+            .SetBasePath(System.IO.Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+            .AddJsonFile($"appsettings.{System.IO.Directory.GetCurrentDirectory()}.json", optional: true)
+            .AddEnvironmentVariables();
+            Configuration = builder.Build();
+           // Configuration = configuration;
+
         }
 
         public IConfiguration Configuration { get; }
@@ -33,6 +41,9 @@ namespace gameapi2
             services.AddSingleton<PlayersProcessor>();
             services.AddSingleton<ItemsProcessor>();
             services.AddSingleton<IRepository, MongoDbRepository>();
+            var appSettings = Configuration.GetSection("AppSettings");
+
+            services.Configure<AppSettings>(appSettings);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -42,8 +53,11 @@ namespace gameapi2
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseMiddleware<AuthenticationMiddleware>();
             app.UseMvc();
+
+
+
         }
     }
 }
