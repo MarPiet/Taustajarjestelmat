@@ -23,7 +23,6 @@ namespace gameapi2.Middleware
         }
         public async Task Invoke(HttpContext context)
         {
-            Console.WriteLine(_appSettings.apikey);
             if (!context.Request.Headers.Keys.Contains("apikey"))
             {
                 context.Response.StatusCode = 400; //Bad Request                

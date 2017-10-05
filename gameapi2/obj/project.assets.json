@@ -12862,11 +12862,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Maz\\Documents\\Taust\\gameapi2\\gameapi2.csproj",
+      "projectUniqueName": "c:\\Users\\Maz\\Documents\\Taust\\gameapi2\\gameapi2.csproj",
       "projectName": "gameapi2",
-      "projectPath": "C:\\Users\\Maz\\Documents\\Taust\\gameapi2\\gameapi2.csproj",
+      "projectPath": "c:\\Users\\Maz\\Documents\\Taust\\gameapi2\\gameapi2.csproj",
       "packagesPath": "C:\\Users\\Maz\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Maz\\Documents\\Taust\\gameapi2\\obj\\",
+      "outputPath": "c:\\Users\\Maz\\Documents\\Taust\\gameapi2\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

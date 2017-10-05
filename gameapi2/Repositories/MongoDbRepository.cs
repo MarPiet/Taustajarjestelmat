@@ -15,7 +15,7 @@ namespace gameapi.Repositories
         private IMongoCollection<Player> _collection;
         public MongoDbRepository(MongoDBClient client)
         {
-            //Getting the database with name "game"
+            //Getting the database with name "game2"
             IMongoDatabase database = client.GetDatabase("game");
 
             //Getting collection with name "players"
