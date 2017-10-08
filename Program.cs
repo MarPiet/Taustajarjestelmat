@@ -11,19 +11,24 @@ namespace Taustajarjestelmat
     class Program
     {       
         static void Main(string[] args)
-        {       
-            ICityBikeDataFetcher asd;
+        {                
+            ICityBikeDataFetcher asd;  
+                    
             if(args[1] == "offline")
             {
-            asd = new OfflineCityBikeDataFetcher();       
-            Console.WriteLine(asd.GetBikeCountInStation(args[0]).Result);
+            asd = new OfflineCityBikeDataFetcher();
+            Task<int> t = Task.Run(() => asd.GetBikeCountInStation(args[0]));       
+            t.Wait();
+            Console.WriteLine(t.Result);
             }
 
             else if(args[1] == "realtime")
             {
                 try{
                 asd = new RealTimeCityBikeDataFetcher();       
-                Console.WriteLine(asd.GetBikeCountInStation(args[0]).Result);
+                Task<int> t = Task.Run(() => asd.GetBikeCountInStation(args[0]));  
+                t.Wait();
+                Console.WriteLine(t.Result);
                 }     
                 catch(ArgumentException e){
                 Console.WriteLine(e);
